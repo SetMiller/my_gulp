@@ -1,0 +1,10 @@
+.main {
+  flex-grow: 1;
+  // .main__container
+  &__container {
+    @include mainContainer($container-max-width, $container-padding, $width-min);
+    // max-width: 1100px;
+    // margin: 0 auto;
+    background: red;
+  }
+}

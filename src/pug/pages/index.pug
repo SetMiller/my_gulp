@@ -1,0 +1,17 @@
+doctype html
+html(lang="ru")
+  include ../components/head
+  +head('eco page')
+  body.body
+    .body__wrapper
+
+      //- header
+      include ../containers/header
+
+      //- main
+      include ../containers/main
+
+      //- footer
+      include ../containers/footer
+
+    script(src="@js/app.min.js") 

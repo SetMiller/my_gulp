@@ -1,0 +1,19 @@
+doctype html
+html(lang="en")
+  include ../components/head
+  +head('about')
+  body.body
+    .body__wrapper
+      //- header
+      include ../containers/header
+      
+      //- main
+      main.main-about
+        p main about
+        img(src="@img/test4.png", alt="", width="150px")
+      //- include modules/main
+      
+      //- footer
+      include ../containers/footer
+
+    script(src="@js/app.min.js") 

@@ -1,0 +1,38 @@
+// ========== import fonts ==========
+// @import './fonts/fonts';
+
+// ========== import variables ==========
+@import "./lib/vars";
+
+// ========== functions mixins ==========
+@import "./lib/functions";
+
+// ========== import mixins ==========
+@import "./lib/mixins";
+
+// ========== import service data ==========
+@import "./lib/fonts_settings";
+@import "./lib/reset";
+
+// ========== import page containers ==========
+@import "./containers/header";
+@import "./containers/main";
+@import "./containers/footer";
+
+// ========== import page components ==========
+// @import "../modules/components/button/button";
+// @import "../modules/components/block-title/block-title";
+// @import "../modules/components/gallery/gallery";
+// @import "../modules/components/item-card/item-card";
+// @import "../modules/components/meal-card/meal-card";
+
+// ========== body styles ==========
+.body {
+  
+  &__wrapper {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    font: $font-normal / 1.5 $fontMain;
+  }
+}

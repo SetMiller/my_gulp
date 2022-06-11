@@ -1,0 +1,102 @@
+@use "sass:math";
+
+// Font-face ========================================
+@mixin font($font_name, $file_name, $weight, $style) {
+	@font-face {
+		font-family: $font_name;
+		font-display: swap;
+		src: url("../fonts/#{$file_name}.woff2") format("woff2"), url("../fonts/#{$file_name}.woff") format("woff");
+		font-weight: #{$weight};
+		font-style: #{$style};
+	}
+}
+
+
+// mainContainer ==============================
+// @@@param:
+// $contMaxWidth		- максимальная ширина контейнера
+// $contPadding			- паддинги справа и слева
+@mixin mainContainer($contMaxWidth, $contPadding, $contMinWidth: 0) {
+	max-width: toRem($contMaxWidth);
+	margin: 0 auto;
+	box-sizing: content-box;
+	padding: 0 toRem($contPadding);
+	min-width: toRem($contMinWidth);
+}
+
+
+// AdaptiveProperty ==============================
+// @@@param:
+// $property				- css свойство, для которого будет применяться миксин
+// $maxSize					- верхнее значение свойства
+// $minSize					- нижнее значение свойства
+// $widthFrom: 
+// $container-width	- максимальная ширина страницы (по-умолчанию размер ограничивающего контейнера + паддинги)
+// $widthTo: 
+// $width-min 			- минимальная ширина страницы (по-умолчанию самая минимальная ширина страницы)
+// $keepSize				- ключ (значения 0, 1, 2, 3)
+
+// пример вызова:
+// 
+// 1.
+// применение медиазапростов в диапазоне от максимального до минимального размера страницы
+// from: $width-max, to: $width-min
+// @include adaptiveValue('height', 350, 50)
+// 
+// 2.
+// применение медиазапросов ТОЛЬКО в указанном диапазоне ширин экрана 
+// вне диапазона медиазапросы будет ОТСУТСТВОВАТЬ
+// @include adaptiveValue('height', 350, 50, 600, 400, 0)
+// 
+// 3.
+// применение медиазапросов ТОЛЬКО в указанном диапазоне ширин экрана,
+// выше и ниже диапазона медиазапросы будут ПРИСУТСТВОВАТЬ 
+// с максимальным и минимальными значениями диапазона
+// @include adaptiveValue('height', 350, 50, 600, 400, 1)
+// 
+// 4.
+// применение медиазапросов ТОЛЬКО в указанном диапазоне ширин экрана,
+// нижнее значение необходимо указать ОТДЕЛЬНО
+// @include adaptiveValue('height', 350, 50, 600, 400, 2)
+// 
+// 5.
+// применение медиазапросов ТОЛЬКО в указанном диапазоне ширин экрана,
+// верхнее значение необходимо указать ОТДЕЛЬНО
+// @include adaptiveValue('height', 350, 50, 600, 400, 3)
+
+@mixin adaptiveProperty($property, $maxSize, $minSize, $widthFrom: $container-width, $widthTo: $width-min, $keepSize: 0) {
+	
+	// Брейк-поинты в EM
+	$widthFromMedia: toEm($widthFrom);
+	$widthToMedia: toEm($widthTo);
+
+	// Формула плавающего значения
+	// Источник: https://css-tricks.com/linearly-scale-font-size-with-css-clamp-based-on-the-viewport/
+	$slope: math.div(($maxSize - $minSize), ($widthFrom - $widthTo));
+	$yIntersection: -$widthTo * $slope + $minSize;
+	$flyValue: #{toRem($yIntersection)} " + " #{$slope * 100}vw;
+
+	// css функция clamp(MIN, VAL, MAX)
+	$propertyValue: #{"clamp(" toRem($minSize) "," $flyValue "," toRem($maxSize) ")"};
+
+
+	// свойство будет доступно в медиа запросах в следующих вариантах:
+	// при размере контейнера выше верхней границы диапазона
+	@if $widthFrom == $container-width or $widthFrom == $width-max or $keepSize == 1 or $keepSize == 2  {
+		@media (min-width: $widthFromMedia) {
+			#{$property}: toRem($maxSize);
+		}
+	}
+
+	// при размере контейнера внутри границ диапазона
+	@media (min-width: $widthToMedia) and (max-width: $widthFromMedia) {
+		#{$property}: $propertyValue;
+	}
+
+	// при размере контейнера ниже нижней границы диапазона
+	@if $widthTo == $width-min or $keepSize == 1 or $keepSize == 3 {
+		@media (max-width: $widthToMedia) {
+			#{$property}: toRem($minSize);
+		}
+	}
+}

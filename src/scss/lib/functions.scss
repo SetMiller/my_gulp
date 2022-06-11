@@ -1,0 +1,25 @@
+@use "sass:math";
+
+// REM ========================================
+@function toPix($px) {
+  @return math.summ($px, px);
+};
+
+// REM ========================================
+@function toRem($px) {
+  @return math.div($px, 16) + rem;
+};
+
+// EM ========================================
+@function toEm($px, $current: 16) {
+  @return math.div($px, $current) + em;
+};
+
+// Percent ========================================
+@function percent($px, $from) {
+  @return math.div($px, $from) * 100%;
+};
+
+
+
+

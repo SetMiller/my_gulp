@@ -1,0 +1,6 @@
+.footer {
+  // .footer__container
+  &__container {
+    @include mainContainer($container-max-width, $container-padding, $width-min);
+  }
+}
